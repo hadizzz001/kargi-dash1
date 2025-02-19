@@ -7,12 +7,10 @@ export async function PATCH(request, { params }) {
   const { id } = params;
   const {
     title, 
-    price, 
-    img,
     description,
-    category,
-    brand,
-    arrival
+    img,
+    price, 
+    category 
      
   } = await request.json();
 
@@ -21,16 +19,14 @@ export async function PATCH(request, { params }) {
 
   try {
     // Update product and its specifications
-    const updatedProduct = await prisma.product.update({
+    const updatedProduct = await prisma.post.update({
       where: { id },
       data: {
         title, 
-        price, 
-        img,
         description,
-        category,
-        brand,
-        arrival
+        img,
+        price, 
+        category 
          
       },
     });
@@ -53,7 +49,7 @@ export async function DELETE(request, { params }) {
  
 
     // Delete the product
-    await prisma.product.delete({
+    await prisma.post.delete({
       where: { id },
     });
 
