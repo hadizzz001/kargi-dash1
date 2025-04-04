@@ -10,7 +10,9 @@ export async function PATCH(request, { params }) {
     description,
     img,
     price, 
-    category 
+    category ,
+            bed ,
+            type ,
      
   } = await request.json();
 
@@ -26,7 +28,9 @@ export async function PATCH(request, { params }) {
         description,
         img,
         price, 
-        category 
+        category ,
+                bed ,
+                type ,
          
       },
     });

@@ -13,6 +13,8 @@ model Post {
   description String
   img String[]
   price String
+  bed String
+  type String
   category String 
 }
 

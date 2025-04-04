@@ -13,12 +13,14 @@ export default function AddProduct() {
   const [price, setPrice] = useState("");
   const [img, setImg] = useState([""]);
   const [category, setCategory] = useState("");
+  const [type, setType] = useState("");
+  const [bed, setBedrooms] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!category) {
-      alert("Please select a category");
+    if (!category || !type) {
+      alert("Please select both category and type");
       return;
     }
 
@@ -27,7 +29,7 @@ export default function AddProduct() {
       return;
     }
 
-    const payload = { title, description, img, price, category };
+    const payload = { title, description, img, price, category, type, bed };
 
     const response = await fetch("/api/products", {
       method: "POST",
@@ -36,7 +38,7 @@ export default function AddProduct() {
     });
 
     if (response.ok) {
-      alert("Product added successfully!");
+      alert("added successfully!");
       window.location.href = "/dashboard";
     } else {
       alert("Failed to add product");
@@ -51,7 +53,7 @@ export default function AddProduct() {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto p-4">
-      <h1 className="text-xl font-bold mb-4">Add New Product</h1>
+      <h1 className="text-xl font-bold mb-4">Add New List</h1>
 
       <input
         type="text"
@@ -69,12 +71,32 @@ export default function AddProduct() {
         className="w-full border p-2 mb-4"
         required
       >
-        <option value="" disabled>
-          Select a category
-        </option>
+        <option value="" disabled>Select a category</option>
         <option value="Sale">Sale</option>
         <option value="Rent">Rent</option>
       </select>
+
+      <label className="block text-lg font-bold mb-2">Type</label>
+      <select
+        value={type}
+        onChange={(e) => setType(e.target.value)}
+        className="w-full border p-2 mb-4"
+        required
+      >
+        <option value="" disabled>Select type</option>
+        <option value="Residential">Residential</option>
+        <option value="Commercial">Commercial</option>
+      </select>
+
+      <label className="block text-lg font-bold mb-2">Number of Bedrooms</label>
+      <input
+        type="number"
+        placeholder="e.g. 3"
+        value={bed}
+        onChange={(e) => setBedrooms(e.target.value)}
+        className="w-full border p-2 mb-4"
+        min={0}
+      />
 
       <input
         type="number"
@@ -98,7 +120,7 @@ export default function AddProduct() {
       <Upload onImagesUpload={handleImgChange} />
 
       <button type="submit" className="bg-green-500 text-white px-4 py-2">
-        Save Product
+        Save
       </button>
     </form>
   );

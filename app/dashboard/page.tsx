@@ -21,19 +21,19 @@ export default function ProductTable() {
       const data = await response.json();
       setProducts(data);
     } else {
-      console.error('Failed to fetch products');
+      console.error('Failed to fetch');
     }
   };
 
   const handleDelete = async (id) => {
-    if (confirm('Are you sure you want to delete this product?')) {
+    if (confirm('Are you sure you want to delete this?')) {
       try {
         const response = await fetch(`/api/products/${id}`, { method: 'DELETE' });
         if (response.ok) {
           alert('Product deleted successfully');
           fetchProducts();
         } else {
-          console.error('Failed to delete product');
+          console.error('Failed to delete');
         }
       } catch (error) {
         console.error('Error:', error);
@@ -53,7 +53,7 @@ export default function ProductTable() {
           }}
         />
       )}
-      <h1 className="text-2xl font-bold mb-4">Product List</h1>
+      <h1 className="text-2xl font-bold mb-4">List</h1>
 
       <table className="table-auto w-full border-collapse border border-gray-200 mb-4">
         <thead>
@@ -62,6 +62,8 @@ export default function ProductTable() {
             <th className="border p-2">Image</th>
             <th className="border p-2">Price</th>
             <th className="border p-2">Category</th>
+            <th className="border p-2">Type</th> {/* New */}
+            <th className="border p-2">Bedrooms</th> {/* New */}
             <th className="border p-2">Actions</th>
           </tr>
         </thead>
@@ -76,6 +78,8 @@ export default function ProductTable() {
               </td>
               <td className="border p-2">{product.price}</td>
               <td className="border p-2">{product.category}</td>
+              <td className="border p-2">{product.type || '-'}</td> {/* New */}
+              <td className="border p-2">{product.bed || '-'}</td> {/* New */}
               <td className="border p-2">
                 <button
                   onClick={() => setEditingProduct(product)}
@@ -104,11 +108,22 @@ function EditProductForm({ product, onCancel, onSave }) {
   const [img, setImg] = useState(product.img || []);
   const [price, setPrice] = useState(product.price);
   const [category, setCategory] = useState(product.category || 'Sale');
+  const [type, setType] = useState(product.type || 'Residential'); // New
+  const [bed, setBedrooms] = useState(product.bed || ''); // New
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const updatedProduct = { ...product, title, description, img, price, category };
+    const updatedProduct = {
+      ...product,
+      title,
+      description,
+      img,
+      price,
+      category,
+      type,
+      bed,
+    };
 
     try {
       const response = await fetch(`/api/products/${product.id}`, {
@@ -118,10 +133,10 @@ function EditProductForm({ product, onCancel, onSave }) {
       });
 
       if (response.ok) {
-        alert('Product updated successfully');
+        alert('updated successfully');
         onSave();
       } else {
-        console.error('Failed to update product');
+        console.error('Failed to update');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -136,7 +151,7 @@ function EditProductForm({ product, onCancel, onSave }) {
 
   return (
     <form onSubmit={handleSubmit} className="border p-4 bg-gray-100 rounded">
-      <h2 className="text-xl font-bold mb-4">Edit Product</h2>
+      <h2 className="text-xl font-bold mb-4">Edit</h2>
 
       <div className="mb-4">
         <label htmlFor="title" className="block text-sm font-medium text-gray-700">
@@ -186,6 +201,37 @@ function EditProductForm({ product, onCancel, onSave }) {
           <option value="Sale">Sale</option>
           <option value="Rent">Rent</option>
         </select>
+      </div>
+
+      {/* New field: Type */}
+      <div className="mb-4">
+        <label htmlFor="type" className="block text-sm font-medium text-gray-700">
+          Type
+        </label>
+        <select
+          id="type"
+          value={type}
+          onChange={(e) => setType(e.target.value)}
+          className="w-full border p-2"
+        >
+          <option value="Residential">Residential</option>
+          <option value="Commercial">Commercial</option>
+        </select>
+      </div>
+
+      {/* New field: Bedrooms */}
+      <div className="mb-4">
+        <label htmlFor="bedrooms" className="block text-sm font-medium text-gray-700">
+          Number of Bedrooms
+        </label>
+        <input
+          id="bedrooms"
+          type="number"
+          min={0}
+          value={bed}
+          onChange={(e) => setBedrooms(e.target.value)}
+          className="w-full border p-2"
+        />
       </div>
 
       <Upload onImagesUpload={handleImgChange} />
